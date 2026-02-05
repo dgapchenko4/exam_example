@@ -1,35 +1,35 @@
 {% extends "base.html" %}
 
-{% block title %}Каталог товаров{% endblock %}
+{% block title %}Каталог книг{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
     <!-- Заголовок -->
-    <h1>Каталог книг</h1>  <!-- Было: Каталог товаров -->
-    <label class="form-label">Жанр</label>  <!-- Было: Категория -->
-    <select name="genre" class="form-select">
+    <h1>Каталог книг</h1>
     
     <!-- Фильтры -->
     <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Фильтры</h5>
+        </div>
         <div class="card-body">
-            <h5 class="card-title mb-3"><strong>Фильтры</strong></h5>
-            <form method="get" class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <label class="form-label">Категория</label>
+            <form method="get">
+                <div class="mb-3">
+                    <label class="form-label">Жанр</label>
                     <select name="category" class="form-select">
-                        <option value="">Все категории</option>
+                        <option value="">Все жанры</option>
                         {% for category in categories %}
                             <option value="{{ category.id }}" 
-                                    {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                    {% if category_filter == category.id|stringformat:"s" %}selected{% endif %}>
                                 {{ category.name }}
                             </option>
+                        {% empty %}
+                            <option value="">Нет жанров в базе</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-8">
-                    <button type="submit" class="btn btn-primary me-2">Применить</button>
-                    <a href="?" class="btn btn-outline-secondary">Сбросить</a>
-                </div>
+                <button type="submit" class="btn btn-primary me-2">Применить</button>
+                <a href="?" class="btn btn-outline-secondary">Сбросить</a>
             </form>
         </div>
     </div>
@@ -37,31 +37,94 @@
     <hr class="my-4">
     
     {% if page_obj %}
-        <!-- Список товаров -->
+        <!-- Список книг -->
         <div class="row">
             {% for book in page_obj %}
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
                         {% if book.image %}
-                            <img src="{{ book.image.url }}" class="card-img-top" alt="{{ book.name }}">
+                            <img src="{{ book.image.url }}" class="card-img-top" alt="{{ book.name }}" 
+                                 style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                                 style="height: 200px;">
+                            </div>
                         {% endif %}
                         <div class="card-body">
                             <h5 class="card-title">{{ book.name }}</h5>
                             <p class="card-text">{{ book.description|truncatechars:100 }}</p>
-                            <p class="fw-bold">Цена: {{ book.price }} руб.</p>
-                            <p class="text-muted">Категория: {{ book.category.name }}</p>
+                            <p class="fw-bold">
+                                {% if book.discount > 0 %}
+                                    <span class="text-decoration-line-through text-muted">{{ book.price }} руб.</span>
+                                    <br>
+                                    <span class="text-danger">{{ book.final_price|floatformat:2 }} руб.</span>
+                                    <span class="badge bg-success ms-2">{{ book.discount }}% скидка</span>
+                                {% else %}
+                                    {{ book.price }} руб.
+                                {% endif %}
+                            </p>
+                            <p class="text-muted small">
+                                <strong>Жанр:</strong> {{ book.genre.name }}<br>
+                                <strong>Автор:</strong> {{ book.author.name }}<br>
+                                <strong>Издательство:</strong> {{ book.publisher.name }}<br>
+                                <strong>Год:</strong> {{ book.year }}
+                            </p>
+                            <a href="#" class="btn btn-primary">Подробнее</a>
+                            {% if user.is_authenticated %}
+                                <a href="#" class="btn btn-success">В корзину</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
+        
+        <!-- Пагинация -->
+        {% if page_obj.has_other_pages %}
+            <nav aria-label="Пагинация">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}">
+                                Назад
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}{% if category_filter %}&category={{ category_filter }}{% endif %}">
+                                    {{ num }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if category_filter %}&category={{ category_filter }}{% endif %}">
+                                Вперед
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
     {% else %}
-        <!-- Сообщение "Товары не найдены" -->
+        <!-- Сообщение "Книги не найдены" -->
         <div class="text-center py-5">
             <div class="mb-4">
-                <i class="bi bi-search display-1 text-muted"></i>
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-search text-muted" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
             </div>
-            <h4 class="mb-3"><strong>Товары не найдены. Попробуйте изменить фильтры.</strong></h4>
+            <h4 class="mb-3"><strong>Книги не найдены. Попробуйте изменить фильтры.</strong></h4>
+            <p class="text-muted">Попробуйте выбрать другой жанр или очистить фильтры</p>
         </div>
     {% endif %}
     
@@ -69,8 +132,8 @@
     
     <!-- Кнопки действий -->
     <div class="d-flex gap-3 mb-5">
-        <button class="btn btn-outline-primary">Сохранить</button>
-        <button class="btn btn-outline-primary">Загрузить на Яндекс Диск</button>
+        <button class="btn btn-outline-primary" onclick="alert('Функция сохранения')">Сохранить</button>
+        <button class="btn btn-outline-primary" onclick="alert('Загрузка на Яндекс Диск')">Загрузить на Яндекс Диск</button>
     </div>
 </div>
 
@@ -78,25 +141,33 @@
 <style>
     .card {
         border: 1px solid #dee2e6;
-        box-shadow: none;
-        border-radius: 4px;
+        border-radius: 8px;
+        transition: transform 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
     .card-title {
         color: #212529;
         font-size: 1.1rem;
+        font-weight: 600;
     }
     
     .form-select {
         border: 1px solid #ced4da;
-        border-radius: 4px;
-        padding: 8px 12px;
+        border-radius: 6px;
+        padding: 10px 12px;
+        font-size: 1rem;
     }
     
     .btn {
-        border-radius: 4px;
-        padding: 8px 20px;
+        border-radius: 6px;
+        padding: 10px 20px;
         font-weight: 500;
+        font-size: 1rem;
     }
     
     .btn-primary {
@@ -112,11 +183,37 @@
     .btn-outline-primary {
         color: #0d6efd;
         border-color: #0d6efd;
+        background-color: transparent;
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        color: white;
+    }
+    
+    .btn-success {
+        background-color: #198754;
+        border-color: #198754;
     }
     
     hr {
         border-color: #dee2e6;
         opacity: 0.5;
+    }
+    
+    .badge {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+    
+    .pagination .page-link {
+        color: #0d6efd;
+        border: 1px solid #dee2e6;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
     }
 </style>
 {% endblock %}
