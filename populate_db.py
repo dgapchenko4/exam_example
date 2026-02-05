@@ -4,7 +4,7 @@
 Запускать через: python manage.py shell < populate_db.py
 """
 
-from products.models import Category, Manufacturer, Supplier, Unit, Product
+from products.models import Category, Manufacturer, Supplier, Unit, Book
 from orders.models import OrderStatus, PickupPoint, Order
 
 
@@ -190,7 +190,7 @@ def create_products():
     ]
 
     for product_data in products_data:
-        Product.objects.get_or_create(
+        Book.objects.get_or_create(
             name=product_data['name'],
             defaults=product_data
         )

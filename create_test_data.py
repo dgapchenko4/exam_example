@@ -6,7 +6,7 @@ from django.utils.text import slugify
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shoe_store.settings')
 django.setup()
 
-from products.models import Category, Product
+from products.models import Category, book
 
 def create_categories():
     categories = [
@@ -29,7 +29,7 @@ def create_categories():
 
 def create_products():
     # Кроссовки
-    Product.objects.get_or_create(
+    book.objects.get_or_create(
         name='Nike Air Max 270',
         defaults={
             'description': 'Стильные кроссовки с технологией Air Max',
@@ -38,7 +38,7 @@ def create_products():
         }
     )
     
-    Product.objects.get_or_create(
+    book.objects.get_or_create(
         name='Adidas Ultraboost',
         defaults={
             'description': 'Беговые кроссовки с технологией Boost',
@@ -48,7 +48,7 @@ def create_products():
     )
     
     # Туфли
-    Product.objects.get_or_create(
+    book.objects.get_or_create(
         name='Кожаные туфли Oxford',
         defaults={
             'description': 'Классические кожаные туфли черного цвета',
@@ -58,7 +58,7 @@ def create_products():
     )
     
     # Ботинки
-    Product.objects.get_or_create(
+    book.objects.get_or_create(
         name='Кожаные ботинки Timberland',
         defaults={
             'description': 'Прочные кожаные ботинки для города',
@@ -77,7 +77,7 @@ def create_products():
     ]
     
     for name, price, category_name, desc in products:
-        Product.objects.get_or_create(
+        book.objects.get_or_create(
             name=name,
             defaults={
                 'description': desc,
@@ -91,4 +91,4 @@ def create_products():
 if __name__ == '__main__':
     create_categories()
     create_products()
-    print(f'Готово! Создано {Category.objects.count()} категорий и {Product.objects.count()} товаров')
+    print(f'Готово! Создано {Category.objects.count()} категорий и {book.objects.count()} товаров')

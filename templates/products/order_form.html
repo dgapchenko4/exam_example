@@ -132,10 +132,10 @@
                             {% if form.image.help_text %}
                                 <div class="form-text">{{ form.image.help_text }}</div>
                             {% endif %}
-                            {% if product.image %}
+                            {% if book.image %}
                                 <div class="mt-2">
                                     <small class="text-muted">Текущее изображение:</small><br>
-                                    <img src="{{ product.image.url }}" alt="Текущее изображение"
+                                    <img src="{{ book.image.url }}" alt="Текущее изображение"
                                          style="max-width: 100px; max-height: 100px; object-fit: cover;">
                                 </div>
                             {% endif %}

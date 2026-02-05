@@ -5,9 +5,9 @@ from django.utils.text import slugify
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shoe_store.settings')
 django.setup()
 
-from products.models import Category, Product
+from products.models import Category, book
 def clear_data():
-    Product.objects.all().delete()
+    book.objects.all().delete()
     Category.objects.all().delete()
     print("Данные очищены")
 
@@ -37,7 +37,7 @@ def create_categories():
 def create_products():
     """Создаем товары"""
     # Удаляем существующие товары
-    Product.objects.all().delete()
+    book.objects.all().delete()
     
     # Кроссовки
     category = Category.objects.get(name='Кроссовки')
@@ -48,7 +48,7 @@ def create_products():
     ]
     
     for name, price, desc in products:
-        Product.objects.create(
+        book.objects.create(
             name=name,
             description=desc,
             price=price,
@@ -65,7 +65,7 @@ def create_products():
     ]
     
     for name, price, desc in products:
-        Product.objects.create(
+        book.objects.create(
             name=name,
             description=desc,
             price=price,
@@ -82,7 +82,7 @@ def create_products():
     ]
     
     for name, price, desc in products:
-        Product.objects.create(
+        book.objects.create(
             name=name,
             description=desc,
             price=price,
@@ -98,7 +98,7 @@ def create_products():
     ]
     
     for name, price, desc in products:
-        Product.objects.create(
+        book.objects.create(
             name=name,
             description=desc,
             price=price,
@@ -114,7 +114,7 @@ def create_products():
     ]
     
     for name, price, desc in products:
-        Product.objects.create(
+        book.objects.create(
             name=name,
             description=desc,
             price=price,
@@ -134,5 +134,5 @@ if __name__ == '__main__':
     print('\n' + '=' * 50)
     print('Готово! Создано:')
     print(f'  Категорий: {Category.objects.count()}')
-    print(f'  Товаров: {Product.objects.count()}')
+    print(f'  Товаров: {book.objects.count()}')
     print('=' * 50)

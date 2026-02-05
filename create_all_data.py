@@ -5,7 +5,7 @@ from django.utils.text import slugify
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shoe_store.settings')
 django.setup()
 
-from products.models import Category, Product, Manufacturer, Supplier, Unit
+from products.models import Category, Book, Manufacturer, Supplier, Unit
 
 def create_manufacturers():
     """Создание производителей"""
@@ -108,7 +108,7 @@ def create_products(categories, manufacturer, supplier, unit):
     
     for name, price, category_name, desc in products_data:
         # Используем get_or_create с полным набором полей
-        product, created = Product.objects.get_or_create(
+        book, created = book.objects.get_or_create(
             name=name,
             defaults={
                 'description': desc,
@@ -148,7 +148,7 @@ def main():
     print(f"   Поставщиков: {Supplier.objects.count()}")
     print(f"   Единиц измерения: {Unit.objects.count()}")
     print(f"   Категорий: {Category.objects.count()}")
-    print(f"   Товаров: {Product.objects.count()}")
+    print(f"   Товаров: {book.objects.count()}")
     print("=" * 50)
 
 if __name__ == '__main__':

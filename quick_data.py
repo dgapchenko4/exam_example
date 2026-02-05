@@ -7,7 +7,7 @@ django.setup()
 from products.models import *
 
 # Очистка
-Product.objects.all().delete()
+Book.objects.all().delete()
 Category.objects.all().delete()
 Manufacturer.objects.all().delete()
 Supplier.objects.all().delete()
@@ -35,7 +35,7 @@ products = [
 ]
 
 for name, price, cat_name, desc in products:
-    p = Product.objects.create(
+    p = Book.objects.create(
         name=name,
         price=price,
         description=desc,
@@ -47,4 +47,4 @@ for name, price, cat_name, desc in products:
     )
     print(f"Товар: {name} - {price} руб.")
 
-print(f"\nСоздано: {Product.objects.count()} товаров")
+print(f"\nСоздано: {Book.objects.count()} товаров")

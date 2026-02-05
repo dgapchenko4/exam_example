@@ -3,8 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
-from .models import Product, Category, Manufacturer, Supplier
-from .forms import ProductForm
+from .models import Book, Genre, Author, Publisher
+from .forms import BookForm
 
 
 def get_user_role(user):
@@ -19,149 +19,153 @@ def get_user_role(user):
         return 'client'
     return 'user'
 
-def product_list(request):
-    """Список товаров с учетом роли пользователя"""
+def book_list(request):
+    """Список книг с учетом роли пользователя"""
     user_role = get_user_role(request.user) if request.user.is_authenticated else 'guest'
 
-    # Базовый queryset
-    products = Product.objects.select_related('category', 'manufacturer', 'supplier', 'unit')
+    # Базовый queryset для книг
+    books = Book.objects.select_related('genre', 'author', 'publisher')
 
-    # Фильтр по категории
-    category_filter = request.GET.get('category', '')
-    if category_filter:
-        products = products.filter(category__id=category_filter)
+    # Фильтр по жанру
+    genre_filter = request.GET.get('genre', '')
+    if genre_filter:
+        books = books.filter(genre__id=genre_filter)
 
     # Фильтры и поиск только для менеджеров и администраторов
     if user_role in ['manager', 'admin']:
         # Поиск
         search_query = request.GET.get('search', '')
         if search_query:
-            products = products.filter(
+            books = books.filter(
                 Q(name__icontains=search_query) |
                 Q(description__icontains=search_query) |
-                Q(category__name__icontains=search_query) |
-                Q(manufacturer__name__icontains=search_query) |  # ИСПРАВЛЕНО
-                Q(supplier__name__icontains=search_query)        # ИСПРАВЛЕНО
+                Q(genre__name__icontains=search_query) |
+                Q(author__name__icontains=search_query) |
+                Q(publisher__name__icontains=search_query)
             )
 
-        # Фильтр по поставщику
-        supplier_filter = request.GET.get('supplier', '')
-        if supplier_filter:
-            products = products.filter(supplier__id=supplier_filter)
+        # Фильтр по издательству
+        publisher_filter = request.GET.get('publisher', '')
+        if publisher_filter:
+            books = books.filter(publisher__id=publisher_filter)
 
         # Сортировка
         sort_by = request.GET.get('sort', 'name')
-        if sort_by == 'quantity_asc':
-            products = products.order_by('quantity')
-        elif sort_by == 'quantity_desc':
-            products = products.order_by('-quantity')
+        if sort_by == 'year_asc':
+            books = books.order_by('year')
+        elif sort_by == 'year_desc':
+            books = books.order_by('-year')
+        elif sort_by == 'price_asc':
+            books = books.order_by('price')
+        elif sort_by == 'price_desc':
+            books = books.order_by('-price')
         else:
-            products = products.order_by('name')
+            books = books.order_by('name')
 
-        suppliers = Supplier.objects.all()
+        publishers = Publisher.objects.all()
     else:
-        suppliers = None
+        publishers = None
         search_query = ''
-        supplier_filter = ''
+        publisher_filter = ''
         sort_by = 'name'
 
-    # Получаем ВСЕ категории для фильтра
-    categories = Category.objects.all()
+    # Получаем ВСЕ жанры для фильтра
+    genres = Genre.objects.all()
 
     # Пагинация
-    paginator = Paginator(products, 10)
+    paginator = Paginator(books, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     context = {
         'page_obj': page_obj,
         'user_role': user_role,
-        'suppliers': suppliers,
+        'publishers': publishers,
         'search_query': search_query,
-        'supplier_filter': supplier_filter,
+        'publisher_filter': publisher_filter,
         'sort_by': sort_by,
-        'categories': categories,
-        'selected_category': category_filter,
+        'genres': genres,
+        'selected_genre': genre_filter,
     }
 
     return render(request, 'products/product_list.html', context)
 
 @login_required
-def product_create(request):
-    """Создание нового товара (только для администраторов)"""
+def book_create(request):
+    """Создание новой книги (только для администраторов)"""
     if not request.user.is_superuser:
         messages.error(request, 'У вас нет прав для выполнения этого действия.')
-        return redirect('main:product_list')
+        return redirect('books:book_list')
 
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
+        form = BookForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Товар успешно создан.')
-            return redirect('main:product_list')
+            messages.success(request, 'Книга успешно создана.')
+            return redirect('books:book_list')
     else:
-        form = ProductForm()
+        form = BookForm()
 
-    return render(request, 'products/product_form.html', {
+    return render(request, 'products/order_form.html', {
         'form': form,
-        'title': 'Добавить товар',
+        'title': 'Добавить книгу',
         'user_role': get_user_role(request.user)
     })
 
 
 @login_required
-def product_update(request, pk):
-    """Редактирование товара (только для администраторов)"""
+def book_update(request, pk):
+    """Редактирование книги (только для администраторов)"""
     if not request.user.is_superuser:
         messages.error(request, 'У вас нет прав для выполнения этого действия.')
-        return redirect('main:product_list')
+        return redirect('products:product_list')
 
-    product = get_object_or_404(Product, pk=pk)
+    book = get_object_or_404(Book, pk=pk)
 
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES, instance=product)
+        form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             # Удаляем старое изображение, если оно заменено
-            if 'image' in request.FILES and product.image:
-                product.image.delete()
+            if 'image' in request.FILES and book.image:
+                book.image.delete()
             form.save()
-            messages.success(request, 'Товар успешно обновлен.')
-            return redirect('main:product_list')
+            messages.success(request, 'Книга успешно обновлена.')
+            return redirect('products:product_list')
     else:
-        form = ProductForm(instance=product)
+        form = BookForm(instance=book)
 
-    return render(request, 'products/product_form.html', {
+    return render(request, 'products/order_form.html', {
         'form': form,
-        'product': product,
-        'title': 'Редактировать товар',
+        'book': book,
+        'title': 'Редактировать книгу',
         'user_role': get_user_role(request.user)
     })
 
 
 @login_required
-def product_delete(request, pk):
-    """Удаление товара (только для администраторов)"""
+def book_delete(request, pk):
+    """Удаление книги (только для администраторов)"""
     if not request.user.is_superuser:
         messages.error(request, 'У вас нет прав для выполнения этого действия.')
-        return redirect('main:product_list')
+        return redirect('products:product_list')
 
-    product = get_object_or_404(Product, pk=pk)
+    book = get_object_or_404(Book, pk=pk)
 
-    # Проверяем, используется ли товар в заказах
-    if hasattr(product, 'orderitem_set') and product.orderitem_set.exists():
-        messages.error(request, 'Невозможно удалить товар, который присутствует в заказах.')
-        return redirect('main:product_list')
+    # Проверяем, используется ли книга в заказах
+    if hasattr(book, 'orderitem_set') and book.orderitem_set.exists():
+        messages.error(request, 'Невозможно удалить книгу, которая присутствует в заказах.')
+        return redirect('products:product_list')
 
     if request.method == 'POST':
         # Удаляем изображение
-        if product.image:
-            product.image.delete()
-        product.delete()
-        messages.success(request, 'Товар успешно удален.')
-        return redirect('main:product_list')
+        if book.image:
+            book.image.delete()
+        book.delete()
+        messages.success(request, 'Книга успешно удалена.')
+        return redirect('products:product_list')
 
-    return render(request, 'products/product_confirm_delete.html', {
-        'product': product,
+    return render(request, 'products/order_confirm_delete.html', {
+        'book': book,
         'user_role': get_user_role(request.user)
     })
 

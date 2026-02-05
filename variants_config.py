@@ -7,7 +7,7 @@ VARIANTS = {
     1: {
         'theme': 'Магазин обуви',
         'app_name': 'products',
-        'main_model': 'Product',
+        'main_model': 'book',
         'main_model_verbose': 'Товар',
         'main_model_plural': 'Товары',
         'category_model': 'Category',
@@ -85,7 +85,7 @@ VARIANTS = {
     3: {
         'theme': 'Магазин электроники',
         'app_name': 'products',
-        'main_model': 'Product',
+        'main_model': 'book',
         'main_model_verbose': 'Товар',
         'main_model_plural': 'Товары',
         'category_model': 'Category',
@@ -163,7 +163,7 @@ VARIANTS = {
     5: {
         'theme': 'Магазин одежды',
         'app_name': 'products',
-        'main_model': 'Product',
+        'main_model': 'book',
         'main_model_verbose': 'Товар',
         'main_model_plural': 'Товары',
         'category_model': 'Category',
@@ -202,7 +202,7 @@ VARIANTS = {
     6: {
         'theme': 'Продуктовый магазин',
         'app_name': 'products',
-        'main_model': 'Product',
+        'main_model': 'book',
         'main_model_verbose': 'Товар',
         'main_model_plural': 'Товары',
         'category_model': 'Category',

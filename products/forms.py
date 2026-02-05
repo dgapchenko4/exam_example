@@ -1,27 +1,29 @@
 from django import forms
-from .models import Product
+from .models import Book
 
 
-class ProductForm(forms.ModelForm):
-    """Форма для создания/редактирования товара"""
+class BookForm(forms.ModelForm):
+    """Форма для создания/редактирования книги"""
 
     class Meta:
-        model = Product
+        model = Book
         fields = [
-            'name', 'category', 'description', 'manufacturer',
-            'supplier', 'price', 'unit', 'quantity', 'discount', 'image'
+            'name', 'genre', 'description', 'author',
+            'publisher', 'price', 'year', 'pages', 'isbn', 'discount', 'image', 'quantity'
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'category': forms.Select(attrs={'class': 'form-control'}),
+            'genre': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'manufacturer': forms.Select(attrs={'class': 'form-control'}),
-            'supplier': forms.Select(attrs={'class': 'form-control'}),
+            'author': forms.Select(attrs={'class': 'form-control'}),
+            'publisher': forms.Select(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-            'unit': forms.Select(attrs={'class': 'form-control'}),
-            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
+            'year': forms.NumberInput(attrs={'class': 'form-control'}),
+            'pages': forms.NumberInput(attrs={'class': 'form-control'}),
+            'isbn': forms.TextInput(attrs={'class': 'form-control'}),
             'discount': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
+            'quantity': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -29,5 +31,4 @@ class ProductForm(forms.ModelForm):
         # Добавляем подсказки к полям
         self.fields['price'].help_text = 'Цена в рублях'
         self.fields['discount'].help_text = 'Скидка в процентах (0-100)'
-        self.fields['quantity'].help_text = 'Количество на складе (не может быть отрицательным)'
-        self.fields['image'].help_text = 'Изображение товара (опционально)'
+        self.fields['isbn'].help_text = 'Международный стандартный книжный номер (13 цифр)'

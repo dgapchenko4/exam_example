@@ -128,7 +128,7 @@ class Command(BaseCommand):
         
         # Заменяем названия моделей и verbose_name
         replacements = {
-            'class Product': f'class {variant["main_model"]}',
+            'class book': f'class {variant["main_model"]}',
             'class Category': f'class {variant["category_model"]}',
             'class Manufacturer': f'class {variant["manufacturer_model"]}',
             'class Supplier': f'class {variant["supplier_model"]}',
@@ -141,7 +141,7 @@ class Command(BaseCommand):
             'verbose_name_plural="Производители"': f'verbose_name_plural="{variant["manufacturer_plural"]}"',
             'verbose_name="Поставщик"': f'verbose_name="{variant["supplier_verbose"]}"',
             'verbose_name_plural="Поставщики"': f'verbose_name_plural="{variant["supplier_plural"]}"',
-            'Product.objects': f'{variant["main_model"]}.objects',
+            'book.objects': f'{variant["main_model"]}.objects',
             'Category': variant['category_model'],
             'Manufacturer': variant['manufacturer_model'],
             'Supplier': variant['supplier_model'],
@@ -178,7 +178,7 @@ class Command(BaseCommand):
             return
             
         content = views_file.read_text(encoding='utf-8')
-        content = content.replace('Product', variant['main_model'])
+        content = content.replace('book', variant['main_model'])
         content = content.replace('Category', variant['category_model'])
         content = content.replace('Manufacturer', variant['manufacturer_model'])
         content = content.replace('Supplier', variant['supplier_model'])
@@ -191,7 +191,7 @@ class Command(BaseCommand):
             return
             
         content = forms_file.read_text(encoding='utf-8')
-        content = content.replace('Product', variant['main_model'])
+        content = content.replace('book', variant['main_model'])
         content = content.replace('Category', variant['category_model'])
         content = content.replace('Manufacturer', variant['manufacturer_model'])
         content = content.replace('Supplier', variant['supplier_model'])
