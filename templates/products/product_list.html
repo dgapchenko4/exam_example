@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Каталог товаров{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Заголовок -->
+    <h1 class="mb-4">Каталог товаров</h1>
+    
+    <!-- Фильтры -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3"><strong>Фильтры</strong></h5>
+            <form method="get" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label">Категория</label>
+                    <select name="category" class="form-select">
+                        <option value="">Все категории</option>
+                        {% for category in categories %}
+                            <option value="{{ category.id }}" 
+                                    {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                                {{ category.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <button type="submit" class="btn btn-primary me-2">Применить</button>
+                    <a href="?" class="btn btn-outline-secondary">Сбросить</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <hr class="my-4">
+    
+    {% if page_obj %}
+        <!-- Список товаров -->
+        <div class="row">
+            {% for product in page_obj %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatechars:100 }}</p>
+                            <p class="fw-bold">Цена: {{ product.price }} руб.</p>
+                            <p class="text-muted">Категория: {{ product.category.name }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <!-- Сообщение "Товары не найдены" -->
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="bi bi-search display-1 text-muted"></i>
+            </div>
+            <h4 class="mb-3"><strong>Товары не найдены. Попробуйте изменить фильтры.</strong></h4>
+        </div>
+    {% endif %}
+    
+    <hr class="my-4">
+    
+    <!-- Кнопки действий -->
+    <div class="d-flex gap-3 mb-5">
+        <button class="btn btn-outline-primary">Сохранить</button>
+        <button class="btn btn-outline-primary">Загрузить на Яндекс Диск</button>
+    </div>
+</div>
+
+<!-- Простые стили -->
+<style>
+    .card {
+        border: 1px solid #dee2e6;
+        box-shadow: none;
+        border-radius: 4px;
+    }
+    
+    .card-title {
+        color: #212529;
+        font-size: 1.1rem;
+    }
+    
+    .form-select {
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        padding: 8px 12px;
+    }
+    
+    .btn {
+        border-radius: 4px;
+        padding: 8px 20px;
+        font-weight: 500;
+    }
+    
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    .btn-outline-secondary {
+        color: #6c757d;
+        border-color: #6c757d;
+    }
+    
+    .btn-outline-primary {
+        color: #0d6efd;
+        border-color: #0d6efd;
+    }
+    
+    hr {
+        border-color: #dee2e6;
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
