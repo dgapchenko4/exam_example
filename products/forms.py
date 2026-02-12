@@ -1,21 +1,21 @@
 from django import forms
-from .models import Book
+#from .models import Book
 
 
 class BookForm(forms.ModelForm):
     """Форма для создания/редактирования книги"""
 
     class Meta:
-        model = Book
+        #model = Book
         fields = [
-            'name', 'genre', 'description', 'author',
+            'name', 'genre', 'description', 'brand',
             'publisher', 'price', 'year', 'pages', 'isbn', 'discount', 'image', 'quantity'
         ]
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'genre': forms.Select(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
-            'author': forms.Select(attrs={'class': 'form-control'}),
+            'brand': forms.Select(attrs={'class': 'form-control'}),
             'publisher': forms.Select(attrs={'class': 'form-control'}),
             'price': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'year': forms.NumberInput(attrs={'class': 'form-control'}),

@@ -1,21 +1,30 @@
 from django.contrib import admin
-from .models import Genre, Book, Author, Publisher
+from .models import Publisher, Product, Brand, Manufacturer, Supplier, Unit, Category
 
-
-
-# Register your models here.
-@admin.register(Genre)
-class BookAdmin(admin.ModelAdmin):
+admin.site.register(Manufacturer)
+class ManufacturerAdmin(admin.ModelAdmin):
     ...
 
-@admin.register(Book)
+admin.site.register(Publisher)
+class PublisherAdmin(admin.ModelAdmin):
+    ...
+
+admin.site.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    ...
+
+admin.site.register(Supplier)
+class SupplierAdmin(admin.ModelAdmin):
+    list_display = ['name']
+
+admin.site.register(Unit)
+class UnitAdmin(admin.ModelAdmin):
+    list_display = ['name', 'abbreviation']
+
+admin.site.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     ...
 
-@admin.register(Author)
-class ManufacturerAdmin(admin.ModelAdmin):
-    ...
-    
-@admin.register(Publisher)
-class SupplierAdmin(admin.ModelAdmin):
-    ...
+admin.site.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ['name']

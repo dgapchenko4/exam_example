@@ -4,14 +4,14 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shoe_store.settings')
 django.setup()
 
-from products.models import Genre, Author, Publisher, Book
+from products.models import Unit, Brand, Supplier, Book
 
 def clear_data():
     """Очистка данных"""
     Book.objects.all().delete()
-    Genre.objects.all().delete()
-    Author.objects.all().delete()
-    Publisher.objects.all().delete()
+    Unit.objects.all().delete()
+    Brand.objects.all().delete()
+    Supplier.objects.all().delete()
     print("Данные очищены")
 
 def create_genres():
@@ -30,7 +30,7 @@ def create_genres():
     ]
     
     for genre_data in genres:
-        genre, created = Genre.objects.get_or_create(
+        genre, created = Unit.objects.get_or_create(
             name=genre_data["name"]
         )
         if created:
@@ -54,7 +54,7 @@ def create_authors():
     ]
     
     for author_data in authors:
-        author, created = Author.objects.get_or_create(
+        author, created = Brand.objects.get_or_create(
             name=author_data["name"]
         )
         if created:
@@ -74,7 +74,7 @@ def create_publishers():
     ]
     
     for publisher_data in publishers:
-        publisher, created = Publisher.objects.get_or_create(
+        publisher, created = Supplier.objects.get_or_create(
             name=publisher_data["name"]
         )
         if created:
@@ -84,22 +84,22 @@ def create_books():
     """Создание книг"""
     # Получаем объекты
     try:
-        fantasy = Genre.objects.get(name='Фантастика')
-        detective = Genre.objects.get(name='Детектив')
-        roman = Genre.objects.get(name='Роман')
-        fantasy_genre = Genre.objects.get(name='Фэнтези')
+        fantasy = Unit.objects.get(name='Фантастика')
+        detective = Unit.objects.get(name='Детектив')
+        roman = Unit.objects.get(name='Роман')
+        fantasy_genre = Unit.objects.get(name='Фэнтези')
         
-        orwell = Author.objects.get(name='Джордж Оруэлл')
-        christie = Author.objects.get(name='Агата Кристи')
-        tolstoy = Author.objects.get(name='Лев Толстой')
-        bulgakov = Author.objects.get(name='Михаил Булгаков')
-        dostoevsky = Author.objects.get(name='Фёдор Достоевский')
-        hemingway = Author.objects.get(name='Эрнест Хемингуэй')
+        orwell = Brand.objects.get(name='Джордж Оруэлл')
+        christie = Brand.objects.get(name='Агата Кристи')
+        tolstoy = Brand.objects.get(name='Лев Толстой')
+        bulgakov = Brand.objects.get(name='Михаил Булгаков')
+        dostoevsky = Brand.objects.get(name='Фёдор Достоевский')
+        hemingway = Brand.objects.get(name='Эрнест Хемингуэй')
         
-        exmo = Publisher.objects.get(name='Эксмо')
-        ast = Publisher.objects.get(name='АСТ')
-        piter = Publisher.objects.get(name='Питер')
-        mif = Publisher.objects.get(name='Манн, Иванов и Фербер')
+        exmo = Supplier.objects.get(name='Эксмо')
+        ast = Supplier.objects.get(name='АСТ')
+        piter = Supplier.objects.get(name='Питер')
+        mif = Supplier.objects.get(name='Манн, Иванов и Фербер')
     except Exception as e:
         print(f"Ошибка при получении объектов: {e}")
         return
@@ -214,8 +214,8 @@ if __name__ == '__main__':
     
     print('\n' + '=' * 50)
     print('Готово! Создано:')
-    print(f'  Жанров: {Genre.objects.count()}')
-    print(f'  Авторов: {Author.objects.count()}')
-    print(f'  Издательств: {Publisher.objects.count()}')
+    print(f'  Жанров: {Unit.objects.count()}')
+    print(f'  Брендов: {Brand.objects.count()}')
+    print(f'  Издательств: {Supplier.objects.count()}')
     print(f'  Книг: {Book.objects.count()}')
     print('=' * 50)

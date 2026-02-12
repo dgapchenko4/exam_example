@@ -5,7 +5,7 @@ import random
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'shoe_store.settings')
 django.setup()
 
-from products.models import Genre, Author, Publisher, Book
+from products.models import Unit, Brand, Supplier, Book
 
 def generate_isbn():
     """Генерация случайного ISBN"""
@@ -51,7 +51,7 @@ def create_genres():
     ]
     
     for genre_data in genres:
-        genre, created = Genre.objects.get_or_create(
+        genre, created = Unit.objects.get_or_create(
             name=genre_data["name"],
             defaults={"slug": genre_data["slug"]}
         )
@@ -80,11 +80,11 @@ def create_authors():
     ]
     
     for name in authors:
-        author, created = Author.objects.get_or_create(name=name)
+        author, created = Brand.objects.get_or_create(name=name)
         if created:
             print(f"✓ Создан автор: {name}")
         else:
-            print(f"↻ Автор уже существует: {name}")
+            print(f"↻ Бренд уже существует: {name}")
 
 def create_publishers():
     """Создание издательств (если их нет)"""
@@ -102,25 +102,25 @@ def create_publishers():
     ]
     
     for name in publishers:
-        publisher, created = Publisher.objects.get_or_create(name=name)
+        publisher, created = Supplier.objects.get_or_create(name=name)
         if created:
             print(f"✓ Создано издательство: {name}")
         else:
-            print(f"↻ Издательство уже существует: {name}")
+            print(f"↻ Производитель уже существует: {name}")
 
 def create_all_books():
     """Создание всех книг с уникальными ISBN"""
     # Получаем жанры
-    fantasy = Genre.objects.get(name='Фантастика')
-    detective = Genre.objects.get(name='Детектив')
-    roman = Genre.objects.get(name='Роман')
-    fantasy_genre = Genre.objects.get(name='Фэнтези')
-    adventure = Genre.objects.get(name='Приключения')
-    science_lit = Genre.objects.get(name='Научная литература')
-    biography = Genre.objects.get(name='Биография')
-    history = Genre.objects.get(name='История')
-    psychology = Genre.objects.get(name='Психология')
-    poetry = Genre.objects.get(name='Поэзия')
+    fantasy = Unit.objects.get(name='Фантастика')
+    detective = Unit.objects.get(name='Детектив')
+    roman = Unit.objects.get(name='Роман')
+    fantasy_genre = Unit.objects.get(name='Фэнтези')
+    adventure = Unit.objects.get(name='Приключения')
+    science_lit = Unit.objects.get(name='Научная литература')
+    biography = Unit.objects.get(name='Биография')
+    history = Unit.objects.get(name='История')
+    psychology = Unit.objects.get(name='Психология')
+    poetry = Unit.objects.get(name='Поэзия')
     
     # Получаем или создаем авторов
     authors = {}
@@ -132,7 +132,7 @@ def create_all_books():
     ]
     
     for name in author_list:
-        authors[name], _ = Author.objects.get_or_create(name=name)
+        authors[name], _ = Brand.objects.get_or_create(name=name)
     
     # Получаем или создаем издательства
     publishers = {}
@@ -140,7 +140,7 @@ def create_all_books():
                      "Альпина Паблишер", "Росмэн", "Дрофа", "Просвещение"]
     
     for name in publisher_list:
-        publishers[name], _ = Publisher.objects.get_or_create(name=name)
+        publishers[name], _ = Supplier.objects.get_or_create(name=name)
     
     # Список всех книг для создания
     all_books = [
@@ -305,7 +305,7 @@ def create_all_books():
             'quantity': 10,
             'year': 1988,
             'genre': science_lit,
-            'author': Author.objects.get_or_create(name='Стивен Хокинг')[0],
+            'author': Brand.objects.get_or_create(name='Стивен Хокинг')[0],
             'publisher': publishers['Альпина Паблишер'],
             'isbn': '978-5-9614-1234-8'
         },
@@ -370,16 +370,16 @@ def main():
         print('\n' + '=' * 60)
         print('ИТОГОВАЯ СТАТИСТИКА:')
         print('=' * 60)
-        print(f'  Жанров в базе: {Genre.objects.count()}')
-        print(f'  Авторов в базе: {Author.objects.count()}')
-        print(f'  Издательств в базе: {Publisher.objects.count()}')
+        print(f'  Жанров в базе: {Unit.objects.count()}')
+        print(f'  Брендов в базе: {Brand.objects.count()}')
+        print(f'  Издательств в базе: {Supplier.objects.count()}')
         print(f'  Всего книг в базе: {Book.objects.count()}')
         print(f'  Создано в этом запуске: {created_books} книг')
         print('=' * 60)
         
         # Покажем распределение книг по жанрам
         print("\nРаспределение книг по жанрам:")
-        for genre in Genre.objects.all():
+        for genre in Unit.objects.all():
             books_count = Book.objects.filter(genre=genre).count()
             if books_count > 0:
                 print(f"  {genre.name}: {books_count} книг")
