@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import Product, Brand
 
-# Убрали импорт django_filters
 
 try:
     from .forms import ProductForm
