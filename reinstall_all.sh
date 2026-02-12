@@ -31,18 +31,18 @@ pip install --no-cache-dir django==4.2.11 pillow==10.2.0
 echo "7. Проверка Django..."
 DJANGO_VER=$(python -m django --version 2>/dev/null)
 if [ $? -eq 0 ]; then
-    echo "   ✅ Django $DJANGO_VER установлен"
+    echo "Django $DJANGO_VER установлен"
 else
-    echo "   ❌ Django НЕ установлен"
+    echo "Django НЕ установлен"
     exit 1
 fi
 
 # 8. Проверить файл migration.py
 echo "8. Проверка файла migration.py..."
-if python -c "from django.db.migrations import migration; print('   ✅ Файл импортируется')" 2>/dev/null; then
-    echo "   ✅ Файл migration.py найден"
+if python -c "from django.db.migrations import migration; print('Файл импортируется')" 2>/dev/null; then
+    echo "Файл migration.py найден"
 else
-    echo "   ❌ Файл migration.py НЕ НАЙДЕН"
+    echo "Файл migration.py НЕ НАЙДЕН"
     
     # Показать что есть в папке миграций
     DJANGO_PATH=$(python -c "import django; print(django.__file__)" 2>/dev/null | sed 's/__init__.py//')
@@ -58,9 +58,9 @@ else
     curl -s "$MIGRATION_URL" -o "$MIGRATION_DIR/migration.py"
     
     if [ -f "$MIGRATION_DIR/migration.py" ]; then
-        echo "   ✅ Файл скачан вручную"
+        echo "Файл скачан вручную"
     else
-        echo "   ❌ Не удалось скачать файл"
+        echo "Не удалось скачать файл"
         exit 1
     fi
 fi

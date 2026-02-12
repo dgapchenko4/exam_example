@@ -31,17 +31,17 @@ pip install django==4.2.11 pillow==10.2.0
 echo "Проверка установки..."
 DJANGO_VERSION=$(python -m django --version 2>/dev/null)
 if [ $? -eq 0 ]; then
-    echo "✅ Django установлен: версия $DJANGO_VERSION"
+    echo "Django установлен: версия $DJANGO_VERSION"
 else
-    echo "❌ Ошибка установки Django"
+    echo "Ошибка установки Django"
     exit 1
 fi
 
 # 8. Проверить файл migration.py
 if find venv -name "migration.py" -type f | grep -q .; then
-    echo "✅ Файл migration.py найден"
+    echo "Файл migration.py найден"
 else
-    echo "❌ Файл migration.py не найден"
+    echo "Файл migration.py не найден"
     exit 1
 fi
 
