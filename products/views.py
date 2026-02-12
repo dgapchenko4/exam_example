@@ -1,12 +1,9 @@
-# products/views.py - ИСПРАВЛЕННАЯ ВЕРСИЯ
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import Product, Brand  # Импортируем Brand вместо Manufacturer
 from django.db.models import Q
-
-# Убрали импорт django_filters
 
 try:
     from .forms import ProductForm
@@ -18,8 +15,6 @@ except ImportError:
         class Meta:
             model = Product
             fields = '__all__'
-            # Важно: в форме тоже нужно заменить author на brand
-            # и manufacturer на brand
 
 
 def get_user_role(user):

@@ -42,7 +42,6 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name="Заказ")
-    # ИСПРАВИТЬ: 'products.Product', а не 'products.Product'
     product = models.ForeignKey('products.Product', on_delete=models.CASCADE, verbose_name="Товар")
     quantity = models.PositiveIntegerField(default=1, verbose_name="Количество")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена за единицу")
@@ -51,8 +50,6 @@ class OrderItem(models.Model):
         app_label = 'orders'
         verbose_name = "Позиция заказа"
         verbose_name_plural = "Позиции заказов"
-        # Можно раскомментировать, когда всё заработает:
-        # unique_together = ['order', 'product']
     
     def __str__(self):
         return f"{self.product.name} x {self.quantity}"

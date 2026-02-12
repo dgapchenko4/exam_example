@@ -7,12 +7,6 @@ class Publisher(models.Model):
     def __str__(self):
         return self.name
 
-class Manufacturer(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Название")
-    
-    def __str__(self):
-        return self.name
-
 class Brand(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
     
@@ -35,8 +29,7 @@ class Unit(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название")
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, 
-                               verbose_name="Родительская категория")
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, verbose_name="Родительская категория")
     
     def __str__(self):
         return self.name
@@ -48,7 +41,6 @@ class Product(models.Model):
     
     # Связи с другими моделями
     publisher = models.ForeignKey(Publisher, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Издатель")
-    # manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Производитель")
     brand = models.ForeignKey(Brand, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Бренд")
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Поставщик")
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Единица измерения")

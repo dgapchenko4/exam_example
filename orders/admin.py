@@ -16,10 +16,10 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(OrderStatus)
 class OrderStatusAdmin(admin.ModelAdmin):
-    list_display = ['name']  # Только name, description нет
+    list_display = ['name']
     search_fields = ['name']
 
 @admin.register(PickupPoint)
 class PickupPointAdmin(admin.ModelAdmin):
-    list_display = ['address']  # Только address, phone нет
+    list_display = ['address']
     search_fields = ['address']
