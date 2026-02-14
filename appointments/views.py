@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
-from .models import Order, OrderStatus, PickupPoint
-from .forms import OrderForm
+from .models import Service, ServiceStatus, Filial, AppointmentItem
+from .forms import ServiceForm
 
 
 def get_user_role(user):
@@ -18,7 +18,7 @@ def get_user_role(user):
 
 
 @login_required
-def order_list(request):
+def appointment_list(request):
     """Список заказов (для менеджеров и администраторов)"""
     user_role = get_user_role(request.user)
 
@@ -28,17 +28,17 @@ def order_list(request):
 
     # Для клиентов показываем только их заказы
     if user_role == 'client':
-        orders = Order.objects.filter(customer=request.user).select_related(
+        appointments = Service.objects.filter(customer=request.user).select_related(
             'status', 'pickup_point', 'customer'
         )
     else:
         # Для менеджеров и админов показываем все заказы
-        orders = Order.objects.select_related('status', 'pickup_point', 'customer')
+        appointments = Service.objects.select_related('status', 'pickup_point', 'customer')
 
-    orders = orders.order_by('-order_date')
+    appointments = appointments.appointment_by('-appointment_date')
 
     # Пагинация
-    paginator = Paginator(orders, 10)
+    paginator = Paginator(appointments, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -47,26 +47,25 @@ def order_list(request):
         'user_role': user_role,
     }
 
-    return render(request, 'orders/order_list.html', context)
+    return render(request, 'appointments/appointment_list.html', context)
 
 
 @login_required
-def order_create(request):
+def appointment_create(request):
     """Создание нового заказа (только для администраторов)"""
     if not request.user.is_superuser:
         messages.error(request, 'У вас нет прав для выполнения этого действия.')
-        return redirect('orders:order_list')
+        return redirect('appointments:appointment_list')
 
     if request.method == 'POST':
-        form = OrderForm(request.POST)
+        form = ServiceForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Заказ успешно создан.')
-            return redirect('orders:order_list')
+            return redirect('appointments:appointment_list')
     else:
-        form = OrderForm()
+        form = ServiceForm()
 
-    return render(request, 'orders/order_form.html', {
+    return render(request, 'appointments/appointment_form.html', {
         'form': form,
         'title': 'Добавить заказ',
         'user_role': get_user_role(request.user)
@@ -74,47 +73,45 @@ def order_create(request):
 
 
 @login_required
-def order_update(request, pk):
+def appointment_update(request, pk):
     """Редактирование заказа (только для администраторов)"""
     if not request.user.is_superuser:
         messages.error(request, 'У вас нет прав для выполнения этого действия.')
-        return redirect('orders:order_list')
+        return redirect('appointments:appointment_list')
 
-    order = get_object_or_404(Order, pk=pk)
+    appointment = get_object_or_404(Service, pk=pk)
 
     if request.method == 'POST':
-        form = OrderForm(request.POST, instance=order)
+        form = ServiceForm(request.POST, instance=appointment)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Заказ успешно обновлен.')
-            return redirect('orders:order_list')
+            return redirect('appointments:appointment_list')
     else:
-        form = OrderForm(instance=order)
+        form = ServiceForm(instance=appointment)
 
-    return render(request, 'orders/order_form.html', {
+    return render(request, 'appointments/appointment_form.html', {
         'form': form,
-        'order': order,
+        'appointment': appointment,
         'title': 'Редактировать заказ',
         'user_role': get_user_role(request.user)
     })
 
 
 @login_required
-def order_delete(request, pk):
+def appointment_delete(request, pk):
     """Удаление заказа (только для администраторов)"""
     if not request.user.is_superuser:
         messages.error(request, 'У вас нет прав для выполнения этого действия.')
-        return redirect('orders:order_list')
+        return redirect('appointments:appointment_list')
 
-    order = get_object_or_404(Order, pk=pk)
+    appointment = get_object_or_404(Service, pk=pk)
 
     if request.method == 'POST':
-        order.delete()
-        messages.success(request, 'Заказ успешно удален.')
-        return redirect('orders:order_list')
+        appointment.delete()
+        return redirect('appointments:appointment_list')
 
-    return render(request, 'orders/order_confirm_delete.html', {
-        'order': order,
+    return render(request, 'appointments/appointment_confirm_delete.html', {
+        'appointment': appointment,
         'user_role': get_user_role(request.user)
     })
 

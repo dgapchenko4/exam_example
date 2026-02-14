@@ -15,17 +15,17 @@ if 'class Book' in content and 'class Product' not in content:
 elif 'class Product' in content:
     print("  - Уже использует Product")
 
-# Исправляем publisher на Publisher
-if "'publisher'" in content:
-    content = content.replace("'publisher'", "'Publisher'")
-    print("  - Исправлен publisher на Publisher")
+# Исправляем doctor на Doctor
+if "'doctor'" in content:
+    content = content.replace("'doctor'", "'Doctor'")
+    print("  - Исправлен doctor на Doctor")
 
 with open('products/models.py', 'w', encoding='utf-8') as f:
     f.write(content)
 
-# 2. Исправить orders/models.py
-print("\nИсправляем orders/models.py...")
-with open('orders/models.py', 'r', encoding='utf-8') as f:
+# 2. Исправить appointments/models.py
+print("\nИсправляем appointments/models.py...")
+with open('appointments/models.py', 'r', encoding='utf-8') as f:
     content = f.read()
 
 # Исправляем ссылку на модель
@@ -35,9 +35,5 @@ if "'products.Book'" in content:
 elif "'products.Product'" in content:
     print("  - Уже использует products.Product")
 
-with open('orders/models.py', 'w', encoding='utf-8') as f:
+with open('appointments/models.py', 'w', encoding='utf-8') as f:
     f.write(content)
-
-print("\nГотово! Теперь выполните:")
-print("python manage.py makemigrations")
-print("python manage.py migrate")
