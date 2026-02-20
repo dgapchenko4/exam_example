@@ -11,7 +11,8 @@ urlpatterns = [
     # Маршруты для товаров
     path('product/add/', views.ProductCreateView.as_view(), name='product_add'),
     path('product/<int:pk>/edit/', views.ProductUpdateView.as_view(), name='product_edit'),
-    path('product/<int:pk>/delete/', views.ProductDeleteView.as_view(), name='product_delete'),
+    path('product/<int:pk>/delete/', views.product_delete, name='product_delete'),
+    # path('product/<int:pk>/delete/', views.ProductDeleteView.as_view(), name='product_delete'),
     
     # Маршруты для заказов
     path('orders/', views.OrderListView.as_view(), name='order_list'),

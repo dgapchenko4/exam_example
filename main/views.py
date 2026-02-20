@@ -9,7 +9,8 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.utils.decorators import method_decorator
 from .models import Product, Supplier, Order, OrderItem, Profile
 from .forms import ProductForm, OrderForm, OrderItemFormSet
-
+from django.views.decorators.http import require_POST
+from django.shortcuts import get_object_or_404
 # ---- Декораторы для проверки ролей ----
 def is_admin(user):
     return hasattr(user, 'profile') and user.profile.role == 'admin'
@@ -86,6 +87,18 @@ def product_table_partial(request):
 
     return render(request, 'main/partials/product_table.html', {'products': products})
 
+@require_POST
+@login_required
+@user_passes_test(is_admin)
+def product_delete(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if OrderItem.objects.filter(product=product).exists():
+        messages.error(request, 'Нельзя удалить товар, присутствующий в заказах.')
+    else:
+        product.delete()
+        messages.success(request, 'Товар успешно удалён.')
+    return redirect('product_list')
+
 # ---- CRUD товаров (только для администратора) ----
 class ProductCreateView(AdminRequiredMixin, SuccessMessageMixin, CreateView):
     model = Product
@@ -101,17 +114,17 @@ class ProductUpdateView(AdminRequiredMixin, SuccessMessageMixin, UpdateView):
     success_url = reverse_lazy('product_list')
     success_message = "Товар успешно изменён"
 
-class ProductDeleteView(AdminRequiredMixin, DeleteView):
+"""class ProductDeleteView(AdminRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy('product_list')
     template_name = 'main/product_confirm_delete.html'
 
-    def post(self, request, *args, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         if OrderItem.objects.filter(product=self.object).exists():
             messages.error(request, 'Нельзя удалить товар, присутствующий в заказах.')
             return redirect('product_list')
-        return super().post(request, *args, **kwargs)
+        return super().dispatch(request, *args, **kwargs)"""
 
 # ---- Заказы ----
 class OrderListView(ManagerOrAdminRequiredMixin, ListView):
