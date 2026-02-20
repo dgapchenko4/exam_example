@@ -1,38 +1,38 @@
 {% extends 'main/base.html' %}
-{% load static %}
-{% block title %}Товары{% endblock %}
 {% block content %}
 <h1>Список товаров</h1>
 {% if show_filters %}
-    <div id="filters">
-        <input type="text" id="search" placeholder="Поиск...">
-        <select id="supplier">
-            <option value="">Все поставщики</option>
-            {% for s in suppliers %}
-                <option value="{{ s.id }}">{{ s.name }}</option>
-            {% endfor %}
-        </select>
-        <select id="sort">
-            <option value="">Сортировка</option>
-            <option value="quantity">по количеству (возр.)</option>
-            <option value="-quantity">по количеству (убыв.)</option>
-        </select>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function updateTable() {
-            $.get('{% url "product_table_partial" %}', {
-                'search': $('#search').val(),
-                'supplier': $('#supplier').val(),
-                'sort': $('#sort').val()
-            }, function(data) {
-                $('#product-table-container').html(data);
-            });
-        }
-        $('#search, #supplier, #sort').on('input change', function() {
-            updateTable();
-        });
-    </script>
+<div id="filters">
+    <input type="text" id="search" placeholder="Поиск...">
+    <select id="discount_range">
+        <option value="">Все диапазоны скидок</option>
+        <option value="0-11.99">0-11.99%</option>
+        <option value="12-18.99">12-18.99%</option>
+        <option value="19+">19% и более</option>
+    </select>
+    <select id="sort">
+        <option value="">Сортировка</option>
+        <option value="price_asc">Цена (возр.)</option>
+        <option value="price_desc">Цена (убыв.)</option>
+        <option value="name_asc">Название (А-Я)</option>
+        <option value="name_desc">Название (Я-А)</option>
+        <option value="quantity_asc">Количество (возр.)</option>
+        <option value="quantity_desc">Количество (убыв.)</option>
+    </select>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+function updateTable() {
+    $.get('{% url "product_table_partial" %}', {
+        'search': $('#search').val(),
+        'discount_range': $('#discount_range').val(),
+        'sort': $('#sort').val()
+    }, function(data) {
+        $('#product-table-container').html(data);
+    });
+}
+$('#search, #discount_range, #sort').on('input change', updateTable);
+</script>
 {% endif %}
 <div id="product-table-container">
     {% include 'main/partials/product_table.html' %}

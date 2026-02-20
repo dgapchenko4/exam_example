@@ -7,7 +7,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils.decorators import method_decorator
-from .models import Product, Order, Profile, OrderItem
+from .models import Product, Supplier, Order, OrderItem, Profile
 from .forms import ProductForm, OrderForm, OrderItemFormSet
 
 # ---- Декораторы для проверки ролей ----
@@ -40,7 +40,10 @@ def product_list(request):
     products = Product.objects.all().select_related('category', 'supplier', 'manufacturer')
     context = {'products': products}
     if request.user.is_authenticated:
-        role = request.user.profile.role
+        try:
+            role = request.user.profile.role
+        except Profile.DoesNotExist:
+            role = None
         if role in ['manager', 'admin']:
             context['show_filters'] = True
     return render(request, template, context)

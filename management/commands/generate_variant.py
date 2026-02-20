@@ -168,7 +168,29 @@ class Command(BaseCommand):
                 'page_title_list': 'Наши врачи',
                 'button_add': 'Добавить врача',
             },
-        }
+        },
+        4: {
+            'theme': 'Магазин велосипедов',
+            'main_model': 'Product',
+            'main_model_verbose': 'Велосипед',
+            'main_model_plural': 'Велосипеды',
+            'category_model': 'Category',
+            'category_verbose': 'Категория',
+            'category_plural': 'Категории',
+            'manufacturer_model': 'Manufacturer',
+            'manufacturer_verbose': 'Производитель',
+            'manufacturer_plural': 'Производители',
+            'supplier_model': 'Supplier',
+            'supplier_verbose': 'Поставщик',
+            'supplier_plural': 'Поставщики',
+            'unit_model': 'Unit',
+            'site_name': 'ВелосипедДрайв',
+            'site_title': 'Система управления велосипедами',
+            'nav_products': 'Велосипеды',
+            'nav_orders': 'Заказы',
+            'page_title_list': 'Каталог велосипедов',
+            'button_add': 'Добавить велосипед',
+}
         
         if variant_number not in variants:
             available = ', '.join(str(k) for k in variants.keys())
