@@ -15,10 +15,10 @@ if 'class Book' in content and 'class Product' not in content:
 elif 'class Product' in content:
     print("  - Уже использует Product")
 
-# Исправляем doctor на Doctor
+# Исправляем doctor на Author
 if "'doctor'" in content:
-    content = content.replace("'doctor'", "'Doctor'")
-    print("  - Исправлен doctor на Doctor")
+    content = content.replace("'doctor'", "'Author'")
+    print("  - Исправлен doctor на Author")
 
 with open('products/models.py', 'w', encoding='utf-8') as f:
     f.write(content)

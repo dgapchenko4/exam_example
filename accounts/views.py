@@ -14,7 +14,7 @@ def user_login(request):
             if user is not None:
                 login(request, user)
                 messages.success(request, f'Добро пожаловать, {username}!')
-                return redirect('doctor_list')
+                return redirect('book_list')
             else:
                 messages.error(request, 'Неверное имя пользователя или пароль')
         else:
@@ -26,7 +26,7 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     messages.success(request, 'Вы успешно вышли из системы')
-    return redirect('doctor_list')
+    return redirect('book_list')
 
 def register(request):
     if request.method == 'POST':

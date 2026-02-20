@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% block title %}{% if object %}Редактирование заказа{% else %}Добавление заказа{% endif %}{% endblock %}
+{% block content %}
+<h2>{% if object %}Редактирование заказа{% else %}Добавление заказа{% endif %}</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <h3>Позиции заказа</h3>
+    {{ formset.management_form }}
+    <table>
+        {% for f in formset %}
+            <tr>
+                <td>{{ f.product }}</td>
+                <td>{{ f.quantity }}</td>
+                <td>{{ f.DELETE }} Удалить</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <button type="submit" class="btn">Сохранить</button>
+    <a href="{% url 'order_list' %}" class="btn">Отмена</a>
+</form>
+{% endblock %}

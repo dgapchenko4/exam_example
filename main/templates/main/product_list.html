@@ -1,0 +1,43 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}Товары{% endblock %}
+{% block content %}
+<h1>Список товаров</h1>
+{% if show_filters %}
+    <div id="filters">
+        <input type="text" id="search" placeholder="Поиск...">
+        <select id="supplier">
+            <option value="">Все поставщики</option>
+            {% for s in suppliers %}
+                <option value="{{ s.id }}">{{ s.name }}</option>
+            {% endfor %}
+        </select>
+        <select id="sort">
+            <option value="">Сортировка</option>
+            <option value="quantity">по количеству (возр.)</option>
+            <option value="-quantity">по количеству (убыв.)</option>
+        </select>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateTable() {
+            $.get('{% url "product_table_partial" %}', {
+                'search': $('#search').val(),
+                'supplier': $('#supplier').val(),
+                'sort': $('#sort').val()
+            }, function(data) {
+                $('#product-table-container').html(data);
+            });
+        }
+        $('#search, #supplier, #sort').on('input change', function() {
+            updateTable();
+        });
+    </script>
+{% endif %}
+<div id="product-table-container">
+    {% include 'main/partials/product_table.html' %}
+</div>
+{% if user.is_authenticated and user.profile.role == 'admin' %}
+    <a href="{% url 'product_add' %}" class="btn">Добавить товар</a>
+{% endif %}
+{% endblock %}

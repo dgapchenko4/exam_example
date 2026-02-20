@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+{% block title %}Заказы{% endblock %}
+{% block content %}
+<h1>Заказы</h1>
+<table class="product-table">
+    <thead>
+        <tr>
+            <th>№ заказа</th>
+            <th>Дата заказа</th>
+            <th>Дата доставки</th>
+            <th>Пункт выдачи</th>
+            <th>Клиент</th>
+            <th>Код</th>
+            <th>Статус</th>
+            {% if user.profile.role == 'admin' %}
+                <th>Действия</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.order_number }}</td>
+            <td>{{ order.order_date }}</td>
+            <td>{{ order.delivery_date }}</td>
+            <td>{{ order.pickup_point.address }}</td>
+            <td>{{ order.client.full_name }}</td>
+            <td>{{ order.pickup_code }}</td>
+            <td>{{ order.get_status_display }}</td>
+            {% if user.profile.role == 'admin' %}
+                <td>
+                    <a href="{% url 'order_edit' order.id %}" class="btn">✎</a>
+                    <a href="{% url 'order_delete' order.id %}" class="btn" onclick="return confirm('Удалить?')">✖</a>
+                </td>
+            {% endif %}
+        </tr>
+        {% empty %}
+        <tr><td colspan="8">Нет заказов</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if user.profile.role == 'admin' %}
+    <a href="{% url 'order_add' %}" class="btn">Добавить заказ</a>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'main/base.html' %}
+{% block content %}
+<h2>Удаление заказа</h2>
+<p>Удалить заказ №{{ object.order_number }}?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn">Да, удалить</button>
+    <a href="{% url 'order_list' %}" class="btn">Отмена</a>
+</form>
+{% endblock %}

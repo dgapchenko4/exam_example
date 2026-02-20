@@ -1,0 +1,49 @@
+{% load static %}
+<table class="product-table">
+    <thead>
+        <tr>
+            <th>Фото</th>
+            <th>Артикул</th>
+            <th>Наименование</th>
+            <th>Категория</th>
+            <th>Цена</th>
+            <th>Скидка</th>
+            <th>Кол-во</th>
+            {% if user.is_authenticated and user.profile.role == 'admin' %}
+                <th>Действия</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in products %}
+        <tr class="{% if p.discount > 15 %}discount-high{% endif %} {% if p.quantity_in_stock == 0 %}out-of-stock{% endif %}">
+            <td>
+                {% if p.photo %}
+                    <img src="{{ p.photo.url }}" width="50" height="33">
+                {% else %}
+                    <img src="/media/products/picture.png" width="50" height="33">
+                {% endif %}
+            </td>
+            <td>{{ p.article }}</td>
+            <td>{{ p.name|truncatechars:50 }}</td>
+            <td>{{ p.category.name }}</td>
+            <td>
+                {% if p.discount > 0 %}
+                    <span class="old-price">{{ p.price }}</span>
+                    <span class="new-price">{{ p.discounted_price|floatformat:2 }}</span>
+                {% else %}
+                    {{ p.price }}
+                {% endif %}
+            </td>
+            <td>{{ p.discount }}%</td>
+            <td>{{ p.quantity_in_stock }}</td>
+            {% if user.is_authenticated and user.profile.role == 'admin' %}
+                <td>
+                    <a href="{% url 'product_edit' p.id %}" class="btn">✎</a>
+                    <a href="{% url 'product_delete' p.id %}" class="btn" onclick="return confirm('Удалить?')">✖</a>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

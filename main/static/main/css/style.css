@@ -1,0 +1,40 @@
+body {
+    font-family: 'Times New Roman', serif;
+    background-color: #FFFFFF;
+    color: #000000;
+    margin: 0;
+    padding: 20px;
+}
+.header, .footer {
+    background-color: #7FFF00; /* дополнительный фон */
+    padding: 10px;
+    text-align: center;
+}
+.btn, .accent {
+    background-color: #00FA9A; /* акцентирование */
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    color: black;
+}
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.product-table th {
+    background-color: #7FFF00;
+}
+.product-table tr.discount-high {
+    background-color: #2E8B57 !important;
+}
+.product-table tr.out-of-stock {
+    background-color: #ADD8E6 !important;
+}
+.old-price {
+    text-decoration: line-through;
+    color: red;
+}
+.new-price {
+    color: black;
+    font-weight: bold;
+}
