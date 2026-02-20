@@ -29,8 +29,8 @@
             <td>{{ order.get_status_display }}</td>
             {% if user.profile.role == 'admin' %}
                 <td>
-                    <a href="{% url 'order_edit' order.id %}" class="btn">✎</a>
-                    <a href="{% url 'order_delete' order.id %}" class="btn" onclick="return confirm('Удалить?')">✖</a>
+                    <a href="{% url 'order_edit' order.id %}" class="btn">Редактировать</a>
+                    <a href="{% url 'order_delete' order.id %}" class="btn" onclick="return confirm('Удалить?')">Удалить</a>
                 </td>
             {% endif %}
         </tr>

@@ -39,8 +39,8 @@
             <td>{{ p.quantity_in_stock }}</td>
             {% if user.is_authenticated and user.profile.role == 'admin' %}
                 <td>
-                    <a href="{% url 'product_edit' p.id %}" class="btn">✎</a>
-                    <a href="{% url 'product_delete' p.id %}" class="btn" onclick="return confirm('Удалить?')">✖</a>
+                    <a href="{% url 'product_edit' p.id %}" class="btn">Редактировать</a>
+                    <a href="{% url 'product_delete' p.id %}" class="btn" onclick="return confirm('Удалить?')">Удалить</a>
                 </td>
             {% endif %}
         </tr>
